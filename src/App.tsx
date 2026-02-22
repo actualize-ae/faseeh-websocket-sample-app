@@ -16,7 +16,7 @@ const WS_BASE_URL =
 export default function App() {
   const [apiKey, setApiKey] = useState(import.meta.env.VITE_API_KEY || "");
   const [voiceId, setVoiceId] = useState("");
-  const [modelId, setModelId] = useState("faseeh-mini-v1-preview");
+  const [modelId, setModelId] = useState("faseeh-v1-preview");
   const [text, setText] = useState("Hello, this is a test.");
   const [streamingChunks, setStreamingChunks] = useState<Float32Array[]>([]);
   const [showPlayer, setShowPlayer] = useState(false);
@@ -167,7 +167,11 @@ export default function App() {
             initialized ? "connected" : connected ? "connecting" : ""
           }`}
         >
-          {initialized ? "Connected" : connected ? "Connecting…" : "Not connected"}
+          {initialized
+            ? "Connected"
+            : connected
+              ? "Connecting…"
+              : "Not connected"}
         </span>
         {audioChunks.length > 0 && (
           <span className="chunk-count">{audioChunks.length} chunk(s)</span>
