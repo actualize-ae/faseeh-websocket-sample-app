@@ -8,15 +8,16 @@ const MODEL_OPTIONS = [
   { id: "faseeh-mini-v1-preview", label: "V1 Faseeh Mini Preview" },
 ];
 
-const WS_BASE_URL =
-  typeof import.meta.env.VITE_WS_BASE_URL === "string"
-    ? import.meta.env.VITE_WS_BASE_URL
-    : "wss://api.faseeh.ai";
+const REGION_OPTIONS = [
+  { id: "global", label: "Global", baseUrl: "wss://api.faseeh.ai" },
+  { id: "uae", label: "UAE", baseUrl: "wss://ae.api.munsit.com" },
+];
 
 export default function App() {
   const [apiKey, setApiKey] = useState(import.meta.env.VITE_API_KEY || "");
   const [voiceId, setVoiceId] = useState("");
   const [modelId, setModelId] = useState("faseeh-v1-preview");
+  const [region, setRegion] = useState("global");
   const [text, setText] = useState("Hello, this is a test.");
   const [streamingChunks, setStreamingChunks] = useState<Float32Array[]>([]);
   const [showPlayer, setShowPlayer] = useState(false);
@@ -47,12 +48,13 @@ export default function App() {
     clear();
     setStreamingChunks([]);
     setShowPlayer(false);
+    const wsBaseUrl = REGION_OPTIONS.find((r) => r.id === region)?.baseUrl || REGION_OPTIONS[0].baseUrl;
     connect({
-      baseUrl: WS_BASE_URL,
+      baseUrl: wsBaseUrl,
       voiceId: voiceId.trim(),
       modelId: modelId || undefined,
     }).catch(() => {});
-  }, [apiKey, voiceId, modelId, connect, clear]);
+  }, [apiKey, voiceId, modelId, region, connect, clear]);
 
   const handleSend = useCallback(() => {
     const t = text.trim();
@@ -111,6 +113,20 @@ export default function App() {
               {MODEL_OPTIONS.map((m) => (
                 <option key={m.id} value={m.id}>
                   {m.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="field">
+            <label htmlFor="region">Region</label>
+            <select
+              id="region"
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+            >
+              {REGION_OPTIONS.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.label}
                 </option>
               ))}
             </select>
