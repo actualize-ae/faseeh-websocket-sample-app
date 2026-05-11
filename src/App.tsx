@@ -10,7 +10,7 @@ const MODEL_OPTIONS = [
 
 const REGION_OPTIONS = [
   { id: "global", label: "Global", baseUrl: "wss://api.faseeh.ai" },
-  { id: "uae", label: "UAE", baseUrl: "wss://ae.api.munsit.com" },
+  { id: "uae", label: "UAE", baseUrl: "wss://ae.api.faseeh.ai" },
 ];
 
 export default function App() {
@@ -48,7 +48,9 @@ export default function App() {
     clear();
     setStreamingChunks([]);
     setShowPlayer(false);
-    const wsBaseUrl = REGION_OPTIONS.find((r) => r.id === region)?.baseUrl || REGION_OPTIONS[0].baseUrl;
+    const wsBaseUrl =
+      REGION_OPTIONS.find((r) => r.id === region)?.baseUrl ||
+      REGION_OPTIONS[0].baseUrl;
     connect({
       baseUrl: wsBaseUrl,
       voiceId: voiceId.trim(),
